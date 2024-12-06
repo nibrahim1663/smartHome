@@ -21,9 +21,7 @@ class DeviceControl(Resource):
 class SensorData(Resource):
     def get(self, sensor_id):
         if sensor_id in sensors:
-           # return jsonify(sensors[sensor_id],f"The temperature in the Kitchen is {sensors[sensor_id]["value"]} {sensors[sensor_id]["unit"]}")
-            data = sensors[sensor_id]
-            return jsonify(data)
+           return jsonify(sensors[sensor_id],f"The temperature in the Kitchen is {sensors[sensor_id]["value"]} {sensors[sensor_id]["unit"]}")
         return {"error": "Sensor not found"}, 404
 
 # Add endpoints to the API
