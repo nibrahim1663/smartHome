@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_restful import Api, Resource
 
 app = Flask(__name__)
@@ -21,12 +21,20 @@ class DeviceControl(Resource):
 class SensorData(Resource):
     def get(self, sensor_id):
         if sensor_id in sensors:
-           return jsonify(sensors[sensor_id],f"The temperature in the Kitchen is {sensors[sensor_id]["value"]} {sensors[sensor_id]["unit"]}")
+            sensor_data = sensors[sensor_id]
+            message = f"{sensor_id} is {sensor_data['value']}{sensor_data['unit']}"
+            return jsonify({"value": sensor_data["value"], "unit": sensor_data["unit"], "message": message})
         return {"error": "Sensor not found"}, 404
+
 
 # Add endpoints to the API
 api.add_resource(DeviceControl, "/devices/<string:device_id>/control")
 api.add_resource(SensorData, "/sensors/<string:sensor_id>/data")
 
+# Serve the HTML file
+@app.route("/")
+def home():
+    return render_template("index.html")
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    app.run(debug=True)
